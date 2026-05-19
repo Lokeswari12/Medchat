@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Analyze Report – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-upload"></i> Upload Cancer Report</h1>
+      <p class="page-sub">Upload a medical report and receive an AI cancer screening analysis with an interactive chatbot</p>
+    </div>
+  </div>
+
+  <div class="upload-wrap">
+    <div class="upload-form-card">
+      <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+
+        <div class="form-section">
+          <h3 class="form-section-title"><i class="fas fa-user"></i> Patient Information</h3>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label for="name">Full Name <span class="required">*</span></label>
+              <div class="inp-wrap"><i class="fas fa-user inp-ico"></i>
+                <input class="inp" type="text" id="name" name="name" placeholder="Enter patient full name" required autocomplete="name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="age">Age</label>
+              <div class="inp-wrap"><i class="fas fa-birthday-cake inp-ico"></i>
+                <input class="inp" type="number" id="age" name="age" placeholder="e.g. 45" min="1" max="120">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <div class="inp-wrap"><i class="fas fa-venus-mars inp-ico"></i>
+                <select class="inp" id="gender" name="gender">
+                  <option value="Not specified">Not specified</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group span-2">
+              <label for="email">Email (optional)</label>
+              <div class="inp-wrap"><i class="fas fa-envelope inp-ico"></i>
+                <input class="inp" type="email" id="email" name="email" placeholder="patient@example.com">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Family History Questionnaire -->
+        <div class="form-section">
+          <h3 class="form-section-title fh-toggle" id="fhToggle" onclick="toggleFH()" style="cursor:pointer;user-select:none">
+            <i class="fas fa-dna"></i> Family History &amp; Risk Factors
+            <span class="fh-badge">Improves AI accuracy</span>
+            <i class="fas fa-chevron-down fh-chevron" id="fhChevron" style="margin-left:auto;font-size:14px;color:var(--text-3)"></i>
+          </h3>
+          <div id="fhBody" style="display:none">
+            <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;line-height:1.6">
+              This information helps the AI give a more accurate risk assessment. All fields are optional.
+            </p>
+            <div class="fh-grid">
+              <div class="fh-group">
+                <label class="fh-label"><i class="fas fa-users"></i> Cancer in Family Members</label>
+                <div class="checkbox-grid">
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Breast Cancer"> <span>Breast Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Colorectal Cancer"> <span>Colorectal Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Lung Cancer"> <span>Lung Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Prostate Cancer"> <span>Prostate Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Ovarian Cancer"> <span>Ovarian Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Skin Cancer"> <span>Skin Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Pancreatic Cancer"> <span>Pancreatic Cancer</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_cancer_type" value="Other Cancer"> <span>Other Cancer</span></label>
+                </div>
+              </div>
+              <div class="fh-group">
+                <label class="fh-label"><i class="fas fa-user-friends"></i> Affected Family Members</label>
+                <div class="checkbox-grid">
+                  <label class="check-item"><input type="checkbox" name="fh_relation" value="Parent"> <span>Parent</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_relation" value="Sibling"> <span>Sibling</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_relation" value="Grandparent"> <span>Grandparent</span></label>
+                  <label class="check-item"><input type="checkbox" name="fh_relation" value="Aunt/Uncle"> <span>Aunt / Uncle</span></label>
+                </div>
+              </div>
+              <div class="fh-group">
+                <label class="fh-label"><i class="fas fa-smoking"></i> Smoking History</label>
+                <div class="inp-wrap">
+                  <i class="fas fa-smoking inp-ico"></i>
+                  <select class="inp" name="fh_smoking">
+                    <option value="Never">Never smoked</option>
+                    <option value="Former">Former smoker (quit)</option>
+                    <option value="Current (light)">Current — light (&lt; 10/day)</option>
+                    <option value="Current (heavy)">Current — heavy (10+/day)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="form-section-title"><i class="fas fa-file-medical"></i> Cancer Report File</h3>
+          <div class="drop-zone" id="dropZone">
+            <input type="file" id="reportFile" name="report" accept=".pdf,.txt,.png,.jpg,.jpeg" hidden required>
+            <div class="dz-inner" id="dzInner">
+              <div class="dz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+              <h3>Drag &amp; Drop your report here</h3>
+              <p>or <button type="button" class="browse-btn" id="browseBtn">browse files</button></p>
+              <div class="dz-formats">
+                <span><i class="fas fa-file-pdf"></i> PDF</span>
+                <span><i class="fas fa-file-alt"></i> TXT</span>
+                <span><i class="fas fa-image"></i> PNG / JPG</span>
+              </div>
+              <small>Maximum file size: 16 MB</small>
+            </div>
+            <div class="file-preview" id="filePreview" style="display:none">
+              <div class="fp-icon"><i class="fas fa-file-medical" id="fpIcon"></i></div>
+              <div>
+                <span class="fp-name" id="fpName">filename.pdf</span>
+                <span class="fp-size" id="fpSize">0 KB</span>
+              </div>
+              <button type="button" class="fp-remove" id="fpRemove"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" id="submitBtn" style="padding:13px;font-size:15px">
+          <i class="fas fa-microscope"></i>
+          <span id="submitTxt">Analyze with MedGemma AI</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="upload-sidebar">
+      <div class="info-card">
+        <h4><i class="fas fa-comments"></i> After Upload</h4>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:10px">
+          Once analyzed, MedGemma will <strong>read your entire report</strong> and let you ask questions about it in plain language.
+        </p>
+        <ul class="info-list">
+          <li><i class="fas fa-check"></i> Ask about any biomarker</li>
+          <li><i class="fas fa-check"></i> Understand your risk level</li>
+          <li><i class="fas fa-check"></i> Get next steps explained</li>
+          <li><i class="fas fa-check"></i> Ask follow-up questions</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4><i class="fas fa-file-medical"></i> Supported Reports</h4>
+        <ul class="info-list">
+          <li><i class="fas fa-vials"></i> Pathology Reports</li>
+          <li><i class="fas fa-x-ray"></i> Imaging Reports (MRI/CT)</li>
+          <li><i class="fas fa-flask"></i> Blood &amp; Lab Results</li>
+          <li><i class="fas fa-stethoscope"></i> Clinical Notes</li>
+          <li><i class="fas fa-file-prescription"></i> Biopsy Results</li>
+        </ul>
+      </div>
+      <div class="info-card warn-card">
+        <h4><i class="fas fa-exclamation-triangle"></i> Disclaimer</h4>
+        <p>For educational and research purposes only. Not a substitute for professional medical advice. Always consult a qualified doctor.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Analysis Overlay -->
+<div class="analysis-overlay" id="analysisOverlay">
+  <div class="analysis-modal">
+    <div class="spinner-wrap">
+      <div class="spin-ring spin-r1"></div>
+      <div class="spin-ring spin-r2"></div>
+      <div class="spin-core"><i class="fas fa-dna"></i></div>
+    </div>
+    <h2>Analyzing Report</h2>
+    <p id="aStatus">Extracting document content…</p>
+    <div class="a-steps">
+      <div class="a-step active" id="as1"><i class="fas fa-file-alt"></i> Extracting</div>
+      <div class="a-step" id="as2"><i class="fas fa-brain"></i> AI Processing</div>
+      <div class="a-step" id="as3"><i class="fas fa-chart-bar"></i> Generating Report</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const dz=document.getElementById('dropZone'),fi=document.getElementById('reportFile'),
+      bb=document.getElementById('browseBtn'),dzi=document.getElementById('dzInner'),
+      fp=document.getElementById('filePreview'),form=document.getElementById('uploadForm'),
+      overlay=document.getElementById('analysisOverlay');
+
+bb.addEventListener('click',()=>fi.click());
+dz.addEventListener('click',e=>{if(!e.target.closest('.fp-remove'))fi.click()});
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag-over')}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag-over')}));
+dz.addEventListener('drop',e=>{const f=e.dataTransfer.files[0];if(f)setFile(f)});
+fi.addEventListener('change',()=>{if(fi.files[0])setFile(fi.files[0])});
+document.getElementById('fpRemove').addEventListener('click',e=>{e.stopPropagation();fi.value='';dzi.style.display='';fp.style.display='none'});
+
+function setFile(file){
+  const icons={pdf:'fa-file-pdf',txt:'fa-file-alt',png:'fa-image',jpg:'fa-image',jpeg:'fa-image'};
+  const ext=file.name.split('.').pop().toLowerCase();
+  document.getElementById('fpIcon').className=`fas ${icons[ext]||'fa-file'}`;
+  document.getElementById('fpName').textContent=file.name;
+  document.getElementById('fpSize').textContent=file.size>1024*1024?(file.size/(1024*1024)).toFixed(2)+' MB':(file.size/1024).toFixed(1)+' KB';
+  dzi.style.display='none';fp.style.display='flex';
+  const dt=new DataTransfer();dt.items.add(file);fi.files=dt.files;
+}
+
+function toggleFH(){
+  const body=document.getElementById('fhBody');
+  const chev=document.getElementById('fhChevron');
+  const open=body.style.display==='none';
+  body.style.display=open?'block':'none';
+  chev.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+}
+
+form.addEventListener('submit',()=>{
+  overlay.style.display='flex';
+  document.getElementById('submitBtn').disabled=true;
+  const msgs=['Extracting text from document…','MedGemma AI is analyzing…','Generating screening report…'];
+  let s=0;
+  function next(){
+    if(s<3){
+      document.getElementById('aStatus').textContent=msgs[s];
+      document.querySelectorAll('.a-step').forEach((el,i)=>{
+        el.classList.toggle('active',i===s);
+        el.classList.toggle('done',i<s);
+      });
+      s++;if(s<3)setTimeout(next,2800);
+    }
+  }
+  next();
+});
+</script>
+{% endblock %}

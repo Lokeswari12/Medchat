@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-chart-line"></i> Analytics Dashboard</h1>
+      <p class="page-sub">Real-time overview of all cancer screening analyses</p>
+    </div>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary"><i class="fas fa-plus"></i> New Analysis</a>
+  </div>
+
+  <div class="dash-grid">
+    <div class="stat-card">
+      <div class="sc-icon fi-sky"><i class="fas fa-file-medical"></i></div>
+      <div><div class="sc-val counter" data-target="{{ total }}">0</div><div class="sc-label">Total Analyses</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon fi-green"><i class="fas fa-check-circle"></i></div>
+      <div><div class="sc-val counter" data-target="{{ risk_counts.Low }}">0</div><div class="sc-label">Low Risk</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon fi-amber"><i class="fas fa-exclamation-triangle"></i></div>
+      <div><div class="sc-val counter" data-target="{{ risk_counts.Medium + risk_counts.High }}">0</div><div class="sc-label">Medium / High Risk</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon fi-rose"><i class="fas fa-skull-crossbones"></i></div>
+      <div><div class="sc-val counter" data-target="{{ risk_counts.Critical }}">0</div><div class="sc-label">Critical Cases</div></div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-header"><h3><i class="fas fa-chart-pie"></i> Risk Distribution</h3></div>
+      <canvas id="riskChart"></canvas>
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#059669"></span>Low <strong>{{ risk_counts.Low }}</strong></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#d97706"></span>Medium <strong>{{ risk_counts.Medium }}</strong></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#dc2626"></span>High <strong>{{ risk_counts.High }}</strong></div>
+        <div class="legend-item"><span class="legend-dot" style="background:#9f1239"></span>Critical <strong>{{ risk_counts.Critical }}</strong></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><h3><i class="fas fa-chart-bar"></i> Cancer Type Distribution</h3></div>
+      <canvas id="typeChart"></canvas>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h3><i class="fas fa-clock"></i> Recent Analyses</h3>
+      <a href="{{ url_for('history') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    {% if analyses %}
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead><tr><th>#</th><th>Patient</th><th>Cancer Type</th><th>Risk</th><th>Confidence</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          {% for a in analyses %}
+          <tr>
+            <td class="id-cell">{{ a.id }}</td>
+            <td><div class="patient-cell"><div class="patient-avatar">{{ a.patient_name[0].upper() }}</div>{{ a.patient_name }}</div></td>
+            <td>{{ a.cancer_type }}</td>
+            <td><span class="risk-badge risk-{{ a.risk_level | lower }}">{{ a.risk_level }}</span></td>
+            <td>
+              <div class="conf-bar-wrap">
+                <div class="conf-bar"><div class="conf-fill" style="width:{{ a.confidence_score }}%"></div></div>
+                <span class="conf-pct">{{ a.confidence_score | int }}%</span>
+              </div>
+            </td>
+            <td class="date-cell">{{ a.analyzed_at }}</td>
+            <td><a href="{{ url_for('results', analysis_id=a.id) }}" class="btn btn-primary btn-sm">View</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-folder-open"></i>
+      <h3>No analyses yet</h3>
+      <p>Upload a cancer report to get started.</p>
+      <a href="{{ url_for('upload') }}" class="btn btn-primary">Analyze Report</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const chartDefaults={plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',titleColor:'#0f172a',bodyColor:'#475569',borderColor:'#e2e8f0',borderWidth:1,padding:12,cornerRadius:8}}};
+
+new Chart(document.getElementById('riskChart'),{
+  type:'doughnut',
+  data:{
+    labels:['Low','Medium','High','Critical'],
+    datasets:[{data:[{{ risk_counts.Low }},{{ risk_counts.Medium }},{{ risk_counts.High }},{{ risk_counts.Critical }}],backgroundColor:['#059669','#d97706','#dc2626','#9f1239'],borderColor:'#fff',borderWidth:3,hoverOffset:6}]
+  },
+  options:{cutout:'68%',...chartDefaults}
+});
+
+const tl={{ cancer_labels | safe }}, tv={{ cancer_counts | safe }};
+if(tl.length){
+  new Chart(document.getElementById('typeChart'),{
+    type:'bar',
+    data:{labels:tl,datasets:[{data:tv,backgroundColor:'rgba(14,165,233,.15)',borderColor:'#0ea5e9',borderWidth:1.5,borderRadius:8}]},
+    options:{responsive:true,...chartDefaults,scales:{x:{grid:{color:'#f8fafc'},ticks:{color:'#94a3b8',font:{size:11}}},y:{grid:{color:'#f8fafc'},ticks:{color:'#94a3b8',stepSize:1},beginAtZero:true}}}
+  });
+}
+</script>
+{% endblock %}

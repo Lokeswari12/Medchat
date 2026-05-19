@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block title %}AI Chat – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="chat-layout">
+
+  <!-- Sidebar -->
+  <aside class="chat-sidebar">
+    <div class="chat-sidebar-card">
+      <h4><i class="fas fa-bolt"></i> Quick Questions</h4>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-ribbon"></i><span>What are breast cancer symptoms?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-lungs"></i><span>How is lung cancer screened?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-vials"></i><span>What does CEA biomarker mean?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-shield-alt"></i><span>How can I reduce cancer risk?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-pills"></i><span>What is chemotherapy?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-dna"></i><span>Explain BRCA gene mutations</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-male"></i><span>What is the PSA test?</span></button>
+      <button class="quick-btn" onclick="sendQuick(this.querySelector('span').textContent)"><i class="fas fa-microscope"></i><span>Difference between benign and malignant</span></button>
+    </div>
+    <div class="chat-sidebar-card">
+      <h4><i class="fas fa-info-circle"></i> About MedGemma</h4>
+      <p style="font-size:13px;color:var(--text-2);line-height:1.6">Google's medical AI, trained on oncology literature, clinical guidelines, and medical databases. Answers in 2-3 clear sentences.</p>
+    </div>
+    <div class="chat-sidebar-card">
+      <button class="clear-btn" onclick="clearChat()"><i class="fas fa-trash-alt"></i> Clear Conversation</button>
+    </div>
+    <div class="chat-sidebar-card warn-card">
+      <h4><i class="fas fa-exclamation-triangle"></i> Disclaimer</h4>
+      <p style="font-size:12px;color:var(--text-2);line-height:1.6">For educational purposes only. Not a substitute for professional medical advice.</p>
+    </div>
+  </aside>
+
+  <!-- Chat Main -->
+  <div class="chat-main">
+    <div class="chat-hdr">
+      <div class="chat-hdr-av"><i class="fas fa-brain"></i></div>
+      <div>
+        <div class="chat-hdr-name">MedGemma AI</div>
+        <div class="chat-hdr-status"><span class="cd-online-dot"></span> Online · Oncology Specialist</div>
+      </div>
+      <span class="chat-model-tag"><i class="fas fa-microchip"></i> google/gemma-3-27b-it</span>
+    </div>
+
+    <!-- Language bar -->
+    <div class="chat-lang-bar">
+      <i class="fas fa-globe"></i>
+      <span data-i18n="chat_lang_label">AI Language:</span>
+      <select class="lang-sel" id="chatLangSel" onchange="changeChatLang(this.value)">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="te">తెలుగు</option>
+        <option value="ta">தமிழ்</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ml">മലയാളം</option>
+        <option value="bn">বাংলা</option>
+        <option value="mr">मराठी</option>
+        <option value="gu">ગુજરાતી</option>
+        <option value="pa">ਪੰਜਾਬੀ</option>
+        <option value="or">ଓଡ଼ିଆ</option>
+        <option value="ur">اردو</option>
+        <option value="as">অসমীয়া</option>
+      </select>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="welcome-msg" id="welcomeMsg">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;margin:0 auto 14px;box-shadow:var(--shadow-accent)">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h3>Hello! I'm MedGemma</h3>
+        <p>Your AI assistant for cancer screening, oncology, and medical questions.<br>I give short, clear answers — no jargon.</p>
+        <div class="welcome-pills">
+          <span class="welcome-pill" onclick="sendQuick(this.textContent)">Cancer screening</span>
+          <span class="welcome-pill" onclick="sendQuick(this.textContent)">Tumour biomarkers</span>
+          <span class="welcome-pill" onclick="sendQuick(this.textContent)">Early detection tips</span>
+          <span class="welcome-pill" onclick="sendQuick(this.textContent)">Cancer stages</span>
+          <span class="welcome-pill" onclick="sendQuick(this.textContent)">Chemo side effects</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea id="chatInput" placeholder="Ask a medical question…" rows="1"
+        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+    <div class="input-hint">
+      Press <kbd>Enter</kbd> to send &nbsp;·&nbsp; <kbd>Shift+Enter</kbd> for new line
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let history=[];
+
+function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+function autoResize(ta){ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,120)+'px'}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()}}
+
+function clean(text){
+  return text
+    .replace(/\*\*(.*?)\*\*/g,'$1')
+    .replace(/\*(.*?)\*/g,'$1')
+    .replace(/`(.*?)`/g,'$1')
+    .replace(/^[\*\-]\s+/gm,'')
+    .replace(/#+\s*/g,'')
+    .replace(/\n{2,}/g,'\n')
+    .replace(/\n/g,'<br>')
+    .trim();
+}
+
+function appendMsg(role,text){
+  const box=document.getElementById('chatMessages');
+  const w=document.getElementById('welcomeMsg');
+  if(w)w.style.display='none';
+  const el=document.createElement('div');
+  el.className='msg'+(role==='user'?' user-msg':'');
+  const av=role==='user'
+    ?'<div class="msg-av user-av">U</div>'
+    :'<div class="msg-av bot-av"><i class="fas fa-brain"></i></div>';
+  const bc=role==='user'?'user-bubble':'bot-bubble';
+  const tm=`<div class="msg-time">${now()}</div>`;
+  el.innerHTML=`${av}<div><div class="msg-bubble ${bc}">${text}</div>${tm}</div>`;
+  box.appendChild(el);box.scrollTop=box.scrollHeight;
+}
+
+function showTyping(){
+  const box=document.getElementById('chatMessages');
+  const el=document.createElement('div');
+  el.className='msg';el.id='typingEl';
+  el.innerHTML='<div class="msg-av bot-av"><i class="fas fa-brain"></i></div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  box.appendChild(el);box.scrollTop=box.scrollHeight;
+}
+function removeTyping(){const el=document.getElementById('typingEl');if(el)el.remove()}
+
+async function sendMessage(){
+  const inp=document.getElementById('chatInput'),btn=document.getElementById('sendBtn');
+  const text=inp.value.trim();if(!text)return;
+  appendMsg('user',text);
+  history.push({role:'user',content:text});
+  inp.value='';inp.style.height='';
+  btn.disabled=true;showTyping();
+  try{
+    const lang=document.getElementById('chatLangSel')?.value||window.LANG||localStorage.getItem('lang')||'en';
+    const res=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:text,history:history.slice(0,-1),language:lang})
+    });
+    const d=await res.json();
+    removeTyping();
+    const reply=d.reply||d.error||'Sorry, an error occurred.';
+    appendMsg('assistant',clean(reply));
+    history.push({role:'assistant',content:reply});
+  }catch(err){
+    removeTyping();
+    appendMsg('assistant','Connection error. Please try again.');
+  }finally{btn.disabled=false;inp.focus()}
+}
+
+function sendQuick(t){document.getElementById('chatInput').value=t;autoResize(document.getElementById('chatInput'));sendMessage()}
+
+const LANG_NAMES={en:'English',hi:'हिंदी',te:'తెలుగు',ta:'தமிழ்',kn:'ಕನ್ನಡ',ml:'മലയാളം',bn:'বাংলা',mr:'मराठी',gu:'ગુજરాતી',pa:'ਪੰਜਾਬੀ',or:'ଓଡ଼ིଆ',ur:'اردو',as:'অসমীয়া'};
+
+// Sync select with stored lang on load
+(function(){
+  const l=localStorage.getItem('lang')||'en';
+  const sel=document.getElementById('chatLangSel');
+  if(sel) sel.value=l;
+})();
+
+function changeChatLang(code){
+  if(window.setLang) window.setLang(code); // syncs navbar + localStorage + window.LANG
+  history=[];
+  const box=document.getElementById('chatMessages');
+  const notice=document.createElement('div');
+  notice.className='lang-notice';
+  notice.style.margin='4px 14px';
+  notice.innerHTML=`<i class="fas fa-globe"></i> AI will now reply in <strong>${LANG_NAMES[code]||code.toUpperCase()}</strong>`;
+  box.appendChild(notice);box.scrollTop=box.scrollHeight;
+}
+
+// Keep select in sync when language is changed from navbar
+const _origSetLang=window.setLang;
+window.setLang=function(code){
+  const prev=window.LANG||'en';
+  if(_origSetLang)_origSetLang(code);
+  const sel=document.getElementById('chatLangSel');
+  if(sel) sel.value=code;
+  if(code!==prev){
+    history=[];
+    const box=document.getElementById('chatMessages');
+    const notice=document.createElement('div');
+    notice.className='lang-notice';
+    notice.style.margin='4px 14px';
+    notice.innerHTML=`<i class="fas fa-globe"></i> AI will now reply in <strong>${LANG_NAMES[code]||code.toUpperCase()}</strong>`;
+    box.appendChild(notice);box.scrollTop=box.scrollHeight;
+  }
+};
+
+function clearChat(){
+  history=[];
+  const box=document.getElementById('chatMessages');
+  box.innerHTML='';
+  const w=document.createElement('div');
+  w.id='welcomeMsg';w.className='welcome-msg';
+  w.innerHTML='<div style="width:56px;height:56px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;margin:0 auto 14px"><i class="fas fa-brain"></i></div><h3>Conversation Cleared</h3><p>Start a new conversation with MedGemma.</p>';
+  box.appendChild(w);
+}
+</script>
+{% endblock %}

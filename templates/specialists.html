@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+{% block title %}Find Cancer Specialists – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-hospital-alt"></i> Find Cancer Specialists</h1>
+      <p class="page-sub">Top oncology hospitals &amp; cancer centres across India — filter by state</p>
+    </div>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="card" style="padding:18px;margin-bottom:24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div class="inp-wrap" style="flex:1;min-width:220px">
+      <i class="fas fa-search inp-ico"></i>
+      <input class="inp" type="text" id="searchInp" placeholder="Search hospital or city…" oninput="filterCards()">
+    </div>
+    <div class="inp-wrap" style="min-width:200px">
+      <i class="fas fa-map-marker-alt inp-ico"></i>
+      <select class="inp" id="stateFilter" onchange="filterCards()">
+        <option value="">All States</option>
+        <option>Maharashtra</option>
+        <option>Delhi</option>
+        <option>Karnataka</option>
+        <option>Tamil Nadu</option>
+        <option>Kerala</option>
+        <option>Telangana</option>
+        <option>Gujarat</option>
+        <option>Uttar Pradesh</option>
+        <option>Punjab &amp; Chandigarh</option>
+        <option>West Bengal</option>
+        <option>Rajasthan</option>
+        <option>Andhra Pradesh</option>
+      </select>
+    </div>
+    <div id="resultCount" style="font-size:13px;color:var(--text-3);white-space:nowrap"></div>
+  </div>
+
+  <!-- Hospital Cards -->
+  <div class="spec-grid" id="specGrid">
+
+    <!-- Maharashtra -->
+    <div class="spec-card" data-state="Maharashtra" data-search="tata memorial hospital mumbai cancer">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">Tata Memorial Hospital</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</div>
+      <div class="spec-tags"><span>Oncology</span><span>Surgery</span><span>Radiation</span></div>
+      <p class="spec-desc">India's premier cancer centre — comprehensive cancer care with all subspecialties under one roof.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Tata+Memorial+Hospital+Mumbai" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://tmc.gov.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Delhi 1 -->
+    <div class="spec-card" data-state="Delhi" data-search="aiims cancer centre new delhi">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">AIIMS Cancer Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> New Delhi</div>
+      <div class="spec-tags"><span>Oncology</span><span>Haematology</span><span>Research</span></div>
+      <p class="spec-desc">National cancer facility at AIIMS Delhi offering advanced oncology, research trials, and bone marrow transplants.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/AIIMS+Cancer+Centre+New+Delhi" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.aiims.edu" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Delhi 2 -->
+    <div class="spec-card" data-state="Delhi" data-search="rajiv gandhi cancer institute rohini delhi">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Private</div>
+      </div>
+      <div class="spec-name">Rajiv Gandhi Cancer Institute &amp; Research Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Rohini, New Delhi</div>
+      <div class="spec-tags"><span>Oncology</span><span>BMT</span><span>Robotic Surgery</span></div>
+      <p class="spec-desc">Dedicated cancer hospital with robotic surgery, bone marrow transplant, and 24/7 oncology emergency services.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Rajiv+Gandhi+Cancer+Institute+Delhi" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.rgcirc.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Karnataka 1 -->
+    <div class="spec-card" data-state="Karnataka" data-search="kidwai memorial institute oncology bangalore">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">Kidwai Memorial Institute of Oncology</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Bangalore, Karnataka</div>
+      <div class="spec-tags"><span>Oncology</span><span>Radiotherapy</span><span>Palliative</span></div>
+      <p class="spec-desc">Karnataka's leading government cancer hospital offering affordable comprehensive cancer treatment.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Kidwai+Memorial+Institute+Bangalore" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.kidwaiinstitute.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Karnataka 2 -->
+    <div class="spec-card" data-state="Karnataka" data-search="manipal cancer centre bangalore">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Private</div>
+      </div>
+      <div class="spec-name">Manipal Comprehensive Cancer Care Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Bangalore, Karnataka</div>
+      <div class="spec-tags"><span>Oncology</span><span>Immunotherapy</span><span>Clinical Trials</span></div>
+      <p class="spec-desc">Multi-disciplinary cancer centre with tumour board, immunotherapy, and precision oncology programs.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Manipal+Cancer+Centre+Bangalore" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.manipalhospitals.com/oncology" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Tamil Nadu -->
+    <div class="spec-card" data-state="Tamil Nadu" data-search="cancer institute wia adyar chennai">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Charitable</div>
+      </div>
+      <div class="spec-name">Cancer Institute (WIA)</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Adyar, Chennai, Tamil Nadu</div>
+      <div class="spec-tags"><span>Oncology</span><span>Research</span><span>Surgery</span></div>
+      <p class="spec-desc">One of India's oldest dedicated cancer centres, pioneering cancer research and affordable treatment since 1954.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Cancer+Institute+WIA+Chennai" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.cancerinstitutewia.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Kerala -->
+    <div class="spec-card" data-state="Kerala" data-search="regional cancer centre thiruvananthapuram kerala rcc">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">Regional Cancer Centre (RCC)</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Thiruvananthapuram, Kerala</div>
+      <div class="spec-tags"><span>Oncology</span><span>Radiotherapy</span><span>BMT</span></div>
+      <p class="spec-desc">Kerala's primary cancer centre with comprehensive oncology services including bone marrow transplantation.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Regional+Cancer+Centre+Thiruvananthapuram" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.rcctvpm.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Telangana -->
+    <div class="spec-card" data-state="Telangana" data-search="basavatarakam indo american cancer hospital hyderabad">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Private</div>
+      </div>
+      <div class="spec-name">Basavatarakam Indo-American Cancer Hospital</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana</div>
+      <div class="spec-tags"><span>Oncology</span><span>Proton Therapy</span><span>Surgery</span></div>
+      <p class="spec-desc">Advanced cancer centre with proton therapy, bone marrow transplant, and comprehensive multidisciplinary oncology.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Basavatarakam+Cancer+Hospital+Hyderabad" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.biach.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Gujarat -->
+    <div class="spec-card" data-state="Gujarat" data-search="gujarat cancer research institute ahmedabad gcri">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">Gujarat Cancer &amp; Research Institute</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Ahmedabad, Gujarat</div>
+      <div class="spec-tags"><span>Oncology</span><span>Research</span><span>Radiotherapy</span></div>
+      <p class="spec-desc">Gujarat's premier government cancer hospital with affordable treatment and active research programs.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Gujarat+Cancer+Research+Institute+Ahmedabad" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://gcri.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Uttar Pradesh -->
+    <div class="spec-card" data-state="Uttar Pradesh" data-search="homi bhabha cancer hospital varanasi tata">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government (Tata)</div>
+      </div>
+      <div class="spec-name">Homi Bhabha Cancer Hospital</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Varanasi, Uttar Pradesh</div>
+      <div class="spec-tags"><span>Oncology</span><span>Surgery</span><span>Chemotherapy</span></div>
+      <p class="spec-desc">Tata Memorial Network hospital bringing world-class cancer care to Eastern Uttar Pradesh.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Homi+Bhabha+Cancer+Hospital+Varanasi" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://tmc.gov.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Punjab & Chandigarh -->
+    <div class="spec-card" data-state="Punjab &amp; Chandigarh" data-search="pgimer cancer centre chandigarh postgraduate">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">PGIMER Cancer Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Chandigarh</div>
+      <div class="spec-tags"><span>Oncology</span><span>Haematology</span><span>BMT</span></div>
+      <p class="spec-desc">North India's leading government cancer centre with haematology, BMT, and advanced radiotherapy.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/PGIMER+Cancer+Centre+Chandigarh" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://pgimer.edu.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- West Bengal -->
+    <div class="spec-card" data-state="West Bengal" data-search="chittaranjan national cancer institute kolkata cnci">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">Chittaranjan National Cancer Institute</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Kolkata, West Bengal</div>
+      <div class="spec-tags"><span>Oncology</span><span>Surgery</span><span>Research</span></div>
+      <p class="spec-desc">Eastern India's primary government cancer hospital with comprehensive diagnostic and treatment services.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Chittaranjan+National+Cancer+Institute+Kolkata" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.cnci.org.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- HCG - Multi -->
+    <div class="spec-card" data-state="" data-search="hcg cancer centre bengaluru ahmedabad surat nagpur multiple cities">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Private Chain</div>
+      </div>
+      <div class="spec-name">HCG Cancer Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Bangalore, Ahmedabad, Surat, Nagpur &amp; 20+ cities</div>
+      <div class="spec-tags"><span>Oncology</span><span>Immunotherapy</span><span>Proton Therapy</span></div>
+      <p class="spec-desc">India's largest oncology chain with presence in 20+ cities, offering proton therapy and precision oncology.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/HCG+Cancer+Centre" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Find Nearest</a>
+        <a href="https://www.hcgoncology.com" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Apollo - Multi -->
+    <div class="spec-card" data-state="" data-search="apollo cancer centre chennai hyderabad delhi multiple">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Private Chain</div>
+      </div>
+      <div class="spec-name">Apollo Cancer Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Chennai, Hyderabad, Delhi, Bangalore &amp; more</div>
+      <div class="spec-tags"><span>Oncology</span><span>Robotic Surgery</span><span>CAR-T Therapy</span></div>
+      <p class="spec-desc">Apollo's dedicated cancer network with cutting-edge CAR-T cell therapy, robotic surgery, and 360° cancer care.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Apollo+Cancer+Centre" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Find Nearest</a>
+        <a href="https://cancercare.apollohospitals.com" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Andhra Pradesh -->
+    <div class="spec-card" data-state="Andhra Pradesh" data-search="nims cancer centre hyderabad nizam institute">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-hospital"></i></div>
+        <div class="spec-type-badge spec-govt">Government</div>
+      </div>
+      <div class="spec-name">MNJ Institute of Oncology</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Hyderabad, Telangana / Andhra Pradesh</div>
+      <div class="spec-tags"><span>Oncology</span><span>Radiotherapy</span><span>Palliative</span></div>
+      <p class="spec-desc">Government oncology institute providing affordable cancer treatment for patients from AP and Telangana.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/MNJ+Institute+Oncology+Hyderabad" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.mnjio.gov.in" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+    <!-- Rajasthan -->
+    <div class="spec-card" data-state="Rajasthan" data-search="bhagwan mahaveer cancer hospital jaipur rajasthan">
+      <div class="spec-card-top">
+        <div class="spec-icon"><i class="fas fa-clinic-medical"></i></div>
+        <div class="spec-type-badge spec-pvt">Charitable</div>
+      </div>
+      <div class="spec-name">Bhagwan Mahaveer Cancer Hospital &amp; Research Centre</div>
+      <div class="spec-city"><i class="fas fa-map-marker-alt"></i> Jaipur, Rajasthan</div>
+      <div class="spec-tags"><span>Oncology</span><span>Surgery</span><span>Chemotherapy</span></div>
+      <p class="spec-desc">Rajasthan's leading affordable cancer hospital, treating over 50,000 patients annually with subsidised care.</p>
+      <div class="spec-actions">
+        <a href="https://www.google.com/maps/search/Bhagwan+Mahaveer+Cancer+Hospital+Jaipur" target="_blank" rel="noopener" class="btn btn-outline btn-sm"><i class="fas fa-map"></i> Directions</a>
+        <a href="https://www.bmchrc.org" target="_blank" rel="noopener" class="btn btn-teal btn-sm"><i class="fas fa-globe"></i> Website</a>
+      </div>
+    </div>
+
+  </div><!-- /.spec-grid -->
+
+  <!-- Helpline Banner -->
+  <div class="helpline-banner">
+    <div class="helpline-left">
+      <div class="helpline-icon"><i class="fas fa-phone-alt"></i></div>
+      <div>
+        <div class="helpline-title">National Cancer Helpline</div>
+        <div class="helpline-sub">Free guidance on cancer treatment &amp; hospitals across India</div>
+      </div>
+    </div>
+    <div class="helpline-number">1800-11-6666</div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function filterCards() {
+  const q      = document.getElementById('searchInp').value.toLowerCase();
+  const state  = document.getElementById('stateFilter').value;
+  const cards  = document.querySelectorAll('.spec-card');
+  let visible  = 0;
+  cards.forEach(c => {
+    const matchState  = !state || c.dataset.state === state || c.dataset.state === '';
+    const matchSearch = !q || c.dataset.search.includes(q) || c.querySelector('.spec-name').textContent.toLowerCase().includes(q);
+    const show = matchState && matchSearch;
+    c.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+  document.getElementById('resultCount').textContent = `${visible} hospital${visible !== 1 ? 's' : ''} found`;
+}
+filterCards();
+</script>
+{% endblock %}

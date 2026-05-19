@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block title %}Cancer Risk Calculator – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-calculator"></i> <span data-i18n="calc_title">Cancer Risk Calculator</span></h1>
+      <p class="page-sub">No report needed — answer a few questions and get your personalised cancer risk score</p>
+    </div>
+  </div>
+
+  <div class="calc-layout">
+    <!-- Form -->
+    <div class="calc-form-card" id="calcForm">
+      <!-- Section 1: Personal -->
+      <div class="calc-section">
+        <h3 class="calc-section-title"><span class="calc-num">1</span> Personal Information</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Age</label>
+            <div class="inp-wrap"><i class="fas fa-birthday-cake inp-ico"></i>
+              <input class="inp" type="number" id="c_age" placeholder="e.g. 45" min="18" max="90" value="40">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <div class="inp-wrap"><i class="fas fa-venus-mars inp-ico"></i>
+              <select class="inp" id="c_gender">
+                <option>Male</option><option>Female</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Lifestyle -->
+      <div class="calc-section">
+        <h3 class="calc-section-title"><span class="calc-num">2</span> Lifestyle Factors</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-smoking"></i> Smoking Status</label>
+            <div class="inp-wrap"><i class="fas fa-smoking inp-ico"></i>
+              <select class="inp" id="c_smoking">
+                <option>Never</option>
+                <option>Former smoker (quit)</option>
+                <option>Current (light — &lt;10/day)</option>
+                <option>Current (heavy — 10+/day)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-wine-bottle"></i> Alcohol Consumption</label>
+            <div class="inp-wrap"><i class="fas fa-wine-bottle inp-ico"></i>
+              <select class="inp" id="c_alcohol">
+                <option>Never</option>
+                <option>Occasional (1-2/week)</option>
+                <option>Moderate (3-5/week)</option>
+                <option>Heavy (daily)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-running"></i> Exercise Frequency</label>
+            <div class="inp-wrap"><i class="fas fa-running inp-ico"></i>
+              <select class="inp" id="c_exercise">
+                <option>Rarely (sedentary)</option>
+                <option>1-2 times/week</option>
+                <option>3-4 times/week</option>
+                <option>Daily (active)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-utensils"></i> Diet Type</label>
+            <div class="inp-wrap"><i class="fas fa-utensils inp-ico"></i>
+              <select class="inp" id="c_diet">
+                <option>Mixed (meat + vegetables)</option>
+                <option>Vegetarian</option>
+                <option>Vegan</option>
+                <option>High in processed/junk food</option>
+                <option>High in red meat</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-weight"></i> Body Weight</label>
+            <div class="inp-wrap"><i class="fas fa-weight inp-ico"></i>
+              <select class="inp" id="c_bmi">
+                <option>Normal weight</option>
+                <option>Slightly overweight</option>
+                <option>Obese</option>
+                <option>Underweight</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-sun"></i> Sun Exposure (daily)</label>
+            <div class="inp-wrap"><i class="fas fa-sun inp-ico"></i>
+              <select class="inp" id="c_sun">
+                <option>Moderate (with protection)</option>
+                <option>Minimal (indoors mostly)</option>
+                <option>High (outdoor work, no sunscreen)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Medical History -->
+      <div class="calc-section">
+        <h3 class="calc-section-title"><span class="calc-num">3</span> Medical History</h3>
+        <div class="form-group" style="margin-bottom:14px">
+          <label><i class="fas fa-dna"></i> Family history of cancer</label>
+          <div class="inp-wrap" style="margin-top:6px"><i class="fas fa-dna inp-ico"></i>
+            <select class="inp" id="c_family_cancer">
+              <option value="No">No family history</option>
+              <option value="Yes - first degree (parent/sibling)">Yes — parent or sibling</option>
+              <option value="Yes - second degree (grandparent/aunt/uncle)">Yes — grandparent/aunt/uncle</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-hospital"></i> Existing medical conditions (select all that apply)</label>
+          <div class="checkbox-grid" style="margin-top:8px">
+            <label class="check-item"><input type="checkbox" name="c_condition" value="Type 2 Diabetes"> <span>Type 2 Diabetes</span></label>
+            <label class="check-item"><input type="checkbox" name="c_condition" value="Hepatitis B or C"> <span>Hepatitis B/C</span></label>
+            <label class="check-item"><input type="checkbox" name="c_condition" value="Chronic inflammation"> <span>Chronic Inflammation</span></label>
+            <label class="check-item"><input type="checkbox" name="c_condition" value="HPV infection"> <span>HPV Infection</span></label>
+            <label class="check-item"><input type="checkbox" name="c_condition" value="GERD/Acid reflux"> <span>GERD / Acid Reflux</span></label>
+            <label class="check-item"><input type="checkbox" name="c_condition" value="Inflammatory bowel disease"> <span>Inflammatory Bowel Disease</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Symptoms -->
+      <div class="calc-section">
+        <h3 class="calc-section-title"><span class="calc-num">4</span> Current Symptoms <span style="font-size:13px;font-weight:400;color:var(--text-2)">(last 3 months)</span></h3>
+        <div class="checkbox-grid">
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Unexplained weight loss"> <span>Unexplained weight loss</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Persistent fatigue"> <span>Persistent fatigue</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Persistent cough"> <span>Persistent cough</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Blood in urine or stool"> <span>Blood in urine/stool</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Unusual lump or swelling"> <span>Unusual lump/swelling</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Night sweats"> <span>Night sweats</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Difficulty swallowing"> <span>Difficulty swallowing</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Changes in bowel habits"> <span>Change in bowel habits</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="Skin changes (moles/sores)"> <span>Skin changes</span></label>
+          <label class="check-item"><input type="checkbox" name="c_symptom" value="None of the above"> <span>None of the above</span></label>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="calcBtn" onclick="calculateRisk()" style="padding:14px;font-size:15px">
+        <i class="fas fa-calculator"></i> <span data-i18n="btn_calculate">Calculate My Risk</span>
+      </button>
+    </div>
+
+    <!-- Sidebar info -->
+    <div class="calc-sidebar">
+      <div class="info-card">
+        <h4><i class="fas fa-info-circle"></i> About This Calculator</h4>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.6">This AI-powered risk calculator uses your health data to estimate your cancer risk — no lab test or report needed. It considers 20+ risk factors used in clinical oncology guidelines.</p>
+      </div>
+      <div class="info-card">
+        <h4><i class="fas fa-shield-alt"></i> Who Should Use This</h4>
+        <ul class="info-list">
+          <li><i class="fas fa-check"></i> People without any lab reports</li>
+          <li><i class="fas fa-check"></i> Preventive health check</li>
+          <li><i class="fas fa-check"></i> Family history of cancer</li>
+          <li><i class="fas fa-check"></i> Lifestyle risk assessment</li>
+        </ul>
+      </div>
+      <div class="info-card warn-card">
+        <h4><i class="fas fa-exclamation-triangle"></i> Disclaimer</h4>
+        <p style="font-size:13px">This is a risk estimation tool, not a diagnosis. Always consult a qualified doctor for medical decisions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="analysis-overlay" id="calcOverlay" style="display:none">
+    <div class="analysis-modal">
+      <div class="spinner-wrap">
+        <div class="spin-ring spin-r1"></div><div class="spin-ring spin-r2"></div>
+        <div class="spin-core"><i class="fas fa-calculator"></i></div>
+      </div>
+      <h2>Calculating Risk</h2>
+      <p>MedGemma AI is analysing your health profile…</p>
+    </div>
+  </div>
+
+  <!-- Results Panel (hidden initially) -->
+  <div id="calcResults" style="display:none;margin-top:32px">
+    <div class="page-header">
+      <h2 class="page-title"><i class="fas fa-chart-pie"></i> Your Risk Assessment</h2>
+      <button class="btn btn-outline btn-sm" onclick="resetCalc()"><i class="fas fa-redo"></i> Recalculate</button>
+    </div>
+
+    <!-- Risk Banner -->
+    <div class="risk-banner" id="riskBanner" style="margin-bottom:24px">
+      <div class="rb-left">
+        <div class="rb-icon" id="riskIcon"><i class="fas fa-chart-pie"></i></div>
+        <div>
+          <div class="rb-label">Overall Cancer Risk</div>
+          <div class="rb-value" id="riskLevelText">—</div>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:40px;font-weight:900;color:var(--text)" id="riskScore">—<span style="font-size:18px">/100</span></div>
+        <div style="font-size:12px;color:var(--text-2)">Risk Score</div>
+      </div>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-card span-2">
+        <div class="rc-header"><i class="fas fa-align-left"></i><h3>Summary</h3></div>
+        <p class="summary-text" id="riskSummary"></p>
+      </div>
+
+      <div class="result-card span-1">
+        <div class="rc-header"><i class="fas fa-dna"></i><h3>Top Cancer Risks Identified</h3></div>
+        <div id="topRisks" class="calc-risk-list"></div>
+      </div>
+
+      <div class="result-card span-2">
+        <div class="rc-header"><i class="fas fa-exclamation-triangle"></i><h3>Key Risk Factors</h3></div>
+        <ul class="findings-list" id="keyFactors"></ul>
+      </div>
+
+      <div class="result-card span-1">
+        <div class="rc-header"><i class="fas fa-vials"></i><h3>Recommended Screenings</h3></div>
+        <ul class="findings-list" id="screenings"></ul>
+      </div>
+
+      <div class="result-card span-2">
+        <div class="rc-header"><i class="fas fa-heart"></i><h3>Lifestyle Advice</h3></div>
+        <div class="rec-grid" id="lifestyleAdvice"></div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <a href="{{ url_for('upload') }}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Actual Report for Deeper Analysis</a>
+      <a href="{{ url_for('find_specialists') }}" class="btn btn-teal"><i class="fas fa-hospital"></i> Find a Specialist</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const riskColors = {Low:'#059669', Medium:'#d97706', High:'#dc2626', Critical:'#9f1239'};
+const riskBgs = {Low:'#d1fae5', Medium:'#fef3c7', High:'#fee2e2', Critical:'#ffe4e6'};
+
+async function calculateRisk(){
+  const overlay = document.getElementById('calcOverlay');
+  overlay.style.display = 'flex';
+  document.getElementById('calcBtn').disabled = true;
+
+  const conditions = [...document.querySelectorAll('input[name="c_condition"]:checked')].map(c=>c.value);
+  const symptoms   = [...document.querySelectorAll('input[name="c_symptom"]:checked')].map(c=>c.value);
+
+  const payload = {
+    age: document.getElementById('c_age').value,
+    gender: document.getElementById('c_gender').value,
+    smoking: document.getElementById('c_smoking').value,
+    alcohol: document.getElementById('c_alcohol').value,
+    exercise: document.getElementById('c_exercise').value,
+    diet: document.getElementById('c_diet').value,
+    bmi: document.getElementById('c_bmi').value,
+    sun_exposure: document.getElementById('c_sun').value,
+    family_cancer: document.getElementById('c_family_cancer').value,
+    conditions, symptoms,
+    language: window.LANG || 'en'
+  };
+
+  try {
+    const res = await fetch('/api/risk-calculate', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    overlay.style.display = 'none';
+    showResults(data);
+  } catch(e) {
+    overlay.style.display = 'none';
+    alert('Error calculating risk. Please try again.');
+    document.getElementById('calcBtn').disabled = false;
+  }
+}
+
+function showResults(d){
+  document.getElementById('calcForm').style.display = 'none';
+  const res = document.getElementById('calcResults');
+  res.style.display = 'block';
+
+  const rl = d.risk_level || 'Medium';
+  const col = riskColors[rl] || '#d97706';
+  const bg  = riskBgs[rl] || '#fef3c7';
+
+  const banner = document.getElementById('riskBanner');
+  banner.className = `risk-banner rb-${rl.toLowerCase()}`;
+  document.getElementById('riskLevelText').textContent = rl + ' Risk';
+  document.getElementById('riskScore').innerHTML = `${d.overall_score||0}<span style="font-size:18px">/100</span>`;
+  document.getElementById('riskSummary').textContent = d.summary || '';
+
+  // Top risks
+  const tr = document.getElementById('topRisks');
+  tr.innerHTML = (d.top_risks||[]).map(r=>`
+    <div class="calc-risk-item">
+      <div class="cri-dot" style="background:${r.likelihood==='High'?'#dc2626':r.likelihood==='Medium'?'#d97706':'#059669'}"></div>
+      <div><div class="cri-name">${r.cancer}</div><div class="cri-reason">${r.reason}</div></div>
+      <span class="cri-badge" style="background:${r.likelihood==='High'?'#fee2e2':r.likelihood==='Medium'?'#fef3c7':'#d1fae5'};color:${r.likelihood==='High'?'#dc2626':r.likelihood==='Medium'?'#d97706':'#059669'}">${r.likelihood}</span>
+    </div>`).join('');
+
+  // Key factors
+  const kf = document.getElementById('keyFactors');
+  kf.innerHTML = (d.key_risk_factors||[]).map(f=>`<li><div class="finding-dot"></div><span>${f}</span></li>`).join('');
+
+  // Screenings
+  const sc = document.getElementById('screenings');
+  sc.innerHTML = (d.recommended_screenings||[]).map(s=>`<li><div class="finding-dot" style="background:var(--teal)"></div><span>${s}</span></li>`).join('');
+
+  // Lifestyle
+  const la = document.getElementById('lifestyleAdvice');
+  la.innerHTML = (d.lifestyle_advice||[]).map((a,i)=>`
+    <div class="rec-item"><div class="rec-num">${i+1}</div><p>${a}</p></div>`).join('');
+
+  res.scrollIntoView({behavior:'smooth'});
+}
+
+function resetCalc(){
+  document.getElementById('calcResults').style.display = 'none';
+  document.getElementById('calcForm').style.display = 'block';
+  document.getElementById('calcBtn').disabled = false;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+{% endblock %}

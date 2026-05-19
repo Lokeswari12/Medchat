@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% block title %}CancerScreen AI – AI Cancer Screening{% endblock %}
+{% block content %}
+
+<!-- ═══  HERO  ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <span class="hero-dot"></span>
+        Powered by MedGemma AI · OpenRouter
+      </div>
+      <h1 class="hero-title">
+        AI-Powered<br>
+        <span class="gradient-text">Cancer Screening</span>
+      </h1>
+      <p class="hero-sub">
+        Upload any cancer report — pathology, blood work, or imaging — and get an instant
+        AI analysis with risk levels, biomarker detection, clinical findings,
+        and a chatbot that answers every question about your specific report.
+      </p>
+      <div class="hero-btns">
+        <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+          <i class="fas fa-microscope"></i> Analyze a Report
+        </a>
+        <a href="{{ url_for('chat_page') }}" class="btn btn-outline btn-lg">
+          <i class="fas fa-comments"></i> Ask AI a Question
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item">
+          <span class="hs-num counter" data-target="{{ total }}">0</span>
+          <span class="hs-label">Reports Analyzed</span>
+        </div>
+        <div class="hs-item">
+          <span class="hs-num counter" data-target="{{ high }}">0</span>
+          <span class="hs-label">High-Risk Detected</span>
+        </div>
+        <div class="hs-item">
+          <span class="hs-num counter" data-target="{{ patients }}">0</span>
+          <span class="hs-label">Patients Screened</span>
+        </div>
+        <div class="hs-item">
+          <span class="hs-num">12+</span>
+          <span class="hs-label">Cancer Types</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero visual card -->
+    <div class="hero-visual">
+      <div class="hero-card-main">
+        <div class="hcm-top">
+          <div class="hcm-icon"><i class="fas fa-file-medical-alt"></i></div>
+          <div>
+            <div class="hcm-title">Analysis Complete</div>
+            <div class="hcm-sub">Patient Report · MedGemma AI</div>
+          </div>
+        </div>
+        <div class="hcm-body">
+          <div class="hcm-row">
+            <span>Cancer Type</span>
+            <span class="hcm-val">Breast Cancer – DCIS</span>
+          </div>
+          <div class="hcm-row">
+            <span>Risk Level</span>
+            <span class="risk-pill rp-high">High Risk</span>
+          </div>
+          <div class="hcm-row">
+            <span>Confidence</span>
+            <span class="hcm-val">87%</span>
+          </div>
+          <div class="hcm-row">
+            <span>Biomarker</span>
+            <span class="hcm-val" style="color:var(--rose)">CA 15-3 ↑ 48.2 U/mL</span>
+          </div>
+          <div class="hcm-row">
+            <span>Next Step</span>
+            <span class="hcm-val" style="color:var(--teal);font-size:12px">Oncology referral</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-chat-bubble">
+        <div class="hcb-avatar"><i class="fas fa-brain"></i></div>
+        <div class="hcb-text">
+          <strong>MedGemma AI</strong>
+          The elevated CA 15-3 at 48.2 U/mL indicates high-risk findings. Urgent specialist referral is advised.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══  CHATBOT HIGHLIGHT (main feature)  ═══ -->
+<section class="chatbot-highlight">
+  <div class="chi-inner">
+    <div>
+      <div class="chi-label"><i class="fas fa-star"></i> Main Feature</div>
+      <h2 class="chi-title">Chat With Your Report — Ask Anything</h2>
+      <p class="chi-sub">
+        After uploading a report, MedGemma reads every detail — biomarkers, findings,
+        risk level — and answers your questions in plain language. No medical jargon.
+        Just clear, accurate answers about your specific report.
+      </p>
+      <div class="chi-list">
+        <div class="chi-item"><i class="fas fa-check"></i> "What does my CEA level mean?"</div>
+        <div class="chi-item"><i class="fas fa-check"></i> "Is my risk level serious?"</div>
+        <div class="chi-item"><i class="fas fa-check"></i> "What should I do next?"</div>
+        <div class="chi-item"><i class="fas fa-check"></i> "Can you explain the findings?"</div>
+        <div class="chi-item"><i class="fas fa-check"></i> "Is this type of cancer treatable?"</div>
+      </div>
+      <a href="{{ url_for('upload') }}" class="chi-btn">
+        <i class="fas fa-upload"></i> Upload Report &amp; Start Chatting
+      </a>
+    </div>
+    <!-- Chat Demo Window -->
+    <div class="chat-demo">
+      <div class="cd-header">
+        <div class="cd-av"><i class="fas fa-brain"></i></div>
+        <div>
+          <div class="cd-name">MedGemma AI</div>
+          <div class="cd-status"><span class="cd-online-dot"></span> Online · Report Analyzed</div>
+        </div>
+      </div>
+      <div class="cd-body">
+        <div class="cd-msg bot">
+          <div class="cd-av" style="width:26px;height:26px;font-size:12px;flex-shrink:0"><i class="fas fa-brain"></i></div>
+          <div class="cd-bubble">I've analyzed the report. CEA is at 12.5 ng/mL — elevated above normal. What would you like to know?</div>
+        </div>
+        <div class="cd-msg user">
+          <div class="cd-bubble">Is this level dangerous?</div>
+        </div>
+        <div class="cd-msg bot">
+          <div class="cd-av" style="width:26px;height:26px;font-size:12px;flex-shrink:0"><i class="fas fa-brain"></i></div>
+          <div class="cd-bubble">Yes. Normal CEA is below 2.5 ng/mL. At 12.5, it strongly suggests colorectal cancer risk. An urgent colonoscopy referral is the recommended next step.</div>
+        </div>
+        <div class="cd-msg user">
+          <div class="cd-bubble">What are my next steps?</div>
+        </div>
+        <div class="cd-msg bot">
+          <div class="cd-av" style="width:26px;height:26px;font-size:12px;flex-shrink:0"><i class="fas fa-brain"></i></div>
+          <div class="cd-bubble">Schedule a gastroenterology appointment immediately, request a CT scan for staging, and avoid delaying — early action is critical.</div>
+        </div>
+      </div>
+      <div class="cd-footer">
+        <div class="cd-fake-input">Ask about your report…</div>
+        <button class="cd-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══  FEATURES  ═══ -->
+<section class="features-section">
+  <div class="features-inner">
+    <div class="section-header">
+      <span class="section-tag">Platform Capabilities</span>
+      <h2 class="section-title">Everything You Need for Cancer Screening</h2>
+      <p class="section-sub">One platform — from document upload to AI-powered clinical analysis</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="fi fi-sky"><i class="fas fa-brain"></i></div>
+        <h3>MedGemma Intelligence</h3>
+        <p>Google's medical AI model trained on oncology reports and clinical guidelines — the same technology used in medical research.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi fi-teal"><i class="fas fa-comments"></i></div>
+        <h3>Report Chatbot</h3>
+        <p>Ask questions about any analyzed report in plain language. MedGemma reads your specific report and gives accurate, concise answers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi fi-purple"><i class="fas fa-file-medical"></i></div>
+        <h3>Multi-Format Reports</h3>
+        <p>Supports PDF, plain text, and image scans — pathology reports, blood work results, and imaging summaries.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi fi-rose"><i class="fas fa-shield-virus"></i></div>
+        <h3>12+ Cancer Types</h3>
+        <p>Detects markers for breast, lung, colorectal, prostate, cervical, skin, blood, liver, pancreatic, and more cancer types.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi fi-amber"><i class="fas fa-vials"></i></div>
+        <h3>Biomarker Analysis</h3>
+        <p>Identifies tumour biomarkers (CEA, CA-125, PSA, AFP, HER2) and correlates them with risk levels and cancer type.</p>
+      </div>
+      <div class="feature-card">
+        <div class="fi fi-green"><i class="fas fa-bolt"></i></div>
+        <h3>Instant Results</h3>
+        <p>Complete screening analysis in seconds — risk level, clinical findings, biomarkers, confidence score, and recommendations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══  HOW IT WORKS  ═══ -->
+<section class="steps-section">
+  <div class="steps-inner">
+    <div class="section-header">
+      <span class="section-tag">Simple Process</span>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub">Four steps from document to AI-powered cancer screening report</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <div class="step-badge"><i class="fas fa-user-plus"></i></div>
+        <h3>Enter Patient Details</h3>
+        <p>Name, age, and gender for a personalised AI analysis context.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <div class="step-badge"><i class="fas fa-upload"></i></div>
+        <h3>Upload Report</h3>
+        <p>Drag and drop your cancer report — PDF, text file, or scanned image.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <div class="step-badge"><i class="fas fa-robot"></i></div>
+        <h3>AI Analysis</h3>
+        <p>MedGemma reads the report, extracts biomarkers, assesses risk, and generates findings.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <div class="step-badge"><i class="fas fa-comments"></i></div>
+        <h3>Ask the Chatbot</h3>
+        <p>Get your full report, then ask MedGemma any question about it in plain language.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══  CANCER TYPES  ═══ -->
+<section class="cancertypes-section">
+  <div class="cancertypes-inner">
+    <div class="section-header">
+      <span class="section-tag">Detection Coverage</span>
+      <h2 class="section-title">Cancer Types We Screen</h2>
+    </div>
+    <div class="cancer-grid">
+      {% set types = [
+        ("fas fa-ribbon","Breast Cancer","fi-rose"),
+        ("fas fa-lungs","Lung Cancer","fi-sky"),
+        ("fas fa-colon","Colorectal Cancer","fi-amber"),
+        ("fas fa-male","Prostate Cancer","fi-teal"),
+        ("fas fa-sun","Skin Melanoma","fi-amber"),
+        ("fas fa-female","Cervical Cancer","fi-purple"),
+        ("fas fa-tint","Leukemia","fi-rose"),
+        ("fas fa-filter","Liver Cancer","fi-green"),
+        ("fas fa-circle-nodes","Pancreatic Cancer","fi-sky"),
+        ("fas fa-circle-dot","Ovarian Cancer","fi-teal"),
+        ("fas fa-triangle-exclamation","Thyroid Cancer","fi-amber"),
+        ("fas fa-droplet","Bladder Cancer","fi-sky"),
+      ] %}
+      {% for icon, name, color in types %}
+      <div class="cancer-card">
+        <div class="cc-icon {{ color }}"><i class="{{ icon }}"></i></div>
+        <span>{{ name }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══  CTA  ═══ -->
+<section class="cta-section">
+  <span class="section-tag">Get Started</span>
+  <h2>Ready to Analyze a Report?</h2>
+  <p>Upload a medical report and get AI cancer screening insights in seconds — then ask MedGemma anything about it.</p>
+  <div class="cta-btns">
+    <a href="{{ url_for('upload') }}" class="btn btn-primary btn-lg">
+      <i class="fas fa-microscope"></i> Analyze Report Now
+    </a>
+    <a href="{{ url_for('chat_page') }}" class="btn btn-teal btn-lg">
+      <i class="fas fa-comments"></i> Open AI Chat
+    </a>
+  </div>
+</section>
+
+{% endblock %}

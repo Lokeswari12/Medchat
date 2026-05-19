@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CancerScreen AI{% endblock %}</title>
+  <!-- PWA -->
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="theme-color" content="#0ea5e9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CancerScreen AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    // Apply theme and language before page renders (prevents flash)
+    (function(){
+      const t=localStorage.getItem('theme');
+      if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+    })();
+  </script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="{{ url_for('index') }}" class="nav-brand">
+      <div class="brand-icon"><i class="fas fa-dna"></i></div>
+      <span class="brand-name">Cancer<span class="brand-accent">Screen</span> <span class="brand-ai">AI</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('index') }}"     class="nav-link {% if request.endpoint=='index'      %}active{% endif %}"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint=='dashboard'  %}active{% endif %}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="{{ url_for('upload') }}"    class="nav-link {% if request.endpoint=='upload'     %}active{% endif %}"><i class="fas fa-upload"></i> Analyze</a></li>
+      <li><a href="{{ url_for('history') }}"   class="nav-link {% if request.endpoint=='history'    %}active{% endif %}"><i class="fas fa-history"></i> History</a></li>
+      <li><a href="{{ url_for('chat_page') }}" class="nav-link {% if request.endpoint=='chat_page'  %}active{% endif %}"><i class="fas fa-comments"></i> AI Chat</a></li>
+      <!-- Tools dropdown -->
+      <li class="nav-dropdown {% if request.endpoint in ['find_specialists','risk_calculator','symptom_checker','prevention'] %}active{% endif %}">
+        <button class="nav-link nav-dropdown-btn" onclick="toggleToolsMenu(event)">
+          <i class="fas fa-th-large"></i> Tools <i class="fas fa-chevron-down nav-caret"></i>
+        </button>
+        <ul class="nav-dropdown-menu">
+          <li><a href="{{ url_for('find_specialists') }}" class="nav-dd-item {% if request.endpoint=='find_specialists' %}active{% endif %}"><i class="fas fa-hospital-alt"></i> Specialists</a></li>
+          <li><a href="{{ url_for('risk_calculator') }}"  class="nav-dd-item {% if request.endpoint=='risk_calculator'  %}active{% endif %}"><i class="fas fa-calculator"></i> Risk Calculator</a></li>
+          <li><a href="{{ url_for('symptom_checker') }}"  class="nav-dd-item {% if request.endpoint=='symptom_checker'  %}active{% endif %}"><i class="fas fa-stethoscope"></i> Symptom Checker</a></li>
+          <li><a href="{{ url_for('prevention') }}"       class="nav-dd-item {% if request.endpoint=='prevention'       %}active{% endif %}"><i class="fas fa-shield-alt"></i> Prevention</a></li>
+        </ul>
+      </li>
+    </ul>
+    <!-- Language Switcher -->
+    <div class="lang-wrap">
+      <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">
+        <i class="fas fa-globe"></i>
+        <span id="langLabel">EN</span>
+        <i class="fas fa-chevron-down" style="font-size:10px"></i>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <div class="lang-menu-grid">
+          <button onclick="setLang('en')"  class="lang-opt" data-l="en">English</button>
+          <button onclick="setLang('hi')"  class="lang-opt" data-l="hi">हिंदी</button>
+          <button onclick="setLang('te')"  class="lang-opt" data-l="te">తెలుగు</button>
+          <button onclick="setLang('ta')"  class="lang-opt" data-l="ta">தமிழ்</button>
+          <button onclick="setLang('kn')"  class="lang-opt" data-l="kn">ಕನ್ನಡ</button>
+          <button onclick="setLang('ml')"  class="lang-opt" data-l="ml">മലയാളം</button>
+          <button onclick="setLang('bn')"  class="lang-opt" data-l="bn">বাংলা</button>
+          <button onclick="setLang('mr')"  class="lang-opt" data-l="mr">मराठी</button>
+          <button onclick="setLang('gu')"  class="lang-opt" data-l="gu">ગુજરાતી</button>
+          <button onclick="setLang('pa')"  class="lang-opt" data-l="pa">ਪੰਜਾਬੀ</button>
+          <button onclick="setLang('or')"  class="lang-opt" data-l="or">ଓଡ଼ିଆ</button>
+          <button onclick="setLang('ur')"  class="lang-opt" data-l="ur">اردو</button>
+          <button onclick="setLang('as')"  class="lang-opt" data-l="as">অসমীয়া</button>
+        </div>
+      </div>
+    </div>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">
+      <i class="fas fa-moon" id="darkIcon"></i>
+    </button>
+    <button id="installBtn" onclick="installPWA()" title="Install CancerScreen AI app"><i class="fas fa-download"></i> Install App</button>
+    <a href="{{ url_for('upload') }}" class="nav-cta"><i class="fas fa-plus"></i> <span data-i18n="nav_new">New Analysis</span></a>
+    <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+  </div>
+</nav>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">
+          <i class="fas fa-{% if category=='error' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+          {{ message }}
+          <button class="flash-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <div class="brand-icon small"><i class="fas fa-dna"></i></div>
+      <span>CancerScreen <span class="brand-accent">AI</span></span>
+    </div>
+    <p class="footer-text">Powered by <strong>MedGemma AI</strong> · Advanced Cancer Screening Analysis</p>
+    <p class="footer-disclaimer"><i class="fas fa-info-circle"></i> For educational &amp; research purposes only. Not a substitute for professional medical advice.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+/* ── Dark Mode ── */
+function toggleDark(){
+  const html=document.documentElement;
+  const dark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', dark?'':'dark');
+  localStorage.setItem('theme', dark?'':'dark');
+  document.getElementById('darkIcon').className = dark?'fas fa-moon':'fas fa-sun';
+}
+(function(){
+  const t=localStorage.getItem('theme');
+  if(t==='dark') document.getElementById('darkIcon').className='fas fa-sun';
+})();
+
+/* ── Tools Dropdown ── */
+function toggleToolsMenu(e){
+  e.stopPropagation();
+  const li=e.currentTarget.closest('.nav-dropdown');
+  li.classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.nav-dropdown')) document.querySelectorAll('.nav-dropdown.open').forEach(el=>el.classList.remove('open'));
+});
+
+/* ── Language ── */
+function toggleLangMenu(){
+  const m=document.getElementById('langMenu');
+  m.style.display=m.style.display==='block'?'none':'block';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.lang-wrap')) document.getElementById('langMenu').style.display='none';
+});
+function setLang(code){
+  localStorage.setItem('lang',code);
+  window.LANG=code;
+  if(window.applyI18n) applyI18n(code);
+  document.getElementById('langLabel').textContent=code.toUpperCase();
+  document.getElementById('langMenu').style.display='none';
+  document.querySelectorAll('.lang-opt').forEach(b=>b.classList.toggle('active',b.dataset.l===code));
+  // Sync all in-page language selects
+  document.querySelectorAll('.lang-sel').forEach(s=>{ s.value=code; });
+}
+(function(){
+  const l=localStorage.getItem('lang')||'en';
+  window.LANG=l;
+  document.getElementById('langLabel').textContent=l.toUpperCase();
+  document.querySelectorAll('.lang-opt').forEach(b=>b.classList.toggle('active',b.dataset.l===l));
+  if(window.applyI18n) applyI18n(l); else window.addEventListener('i18nReady',()=>applyI18n(l));
+})();
+
+/* ── PWA service worker ── */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/static/sw.js',{scope:'/'})
+    .then(reg=>{
+      // Check for updates on every page load
+      reg.update();
+      reg.addEventListener('updatefound',()=>{
+        const nw=reg.installing;
+        nw?.addEventListener('statechange',()=>{
+          if(nw.state==='installed' && navigator.serviceWorker.controller){
+            nw.postMessage('SKIP_WAITING');
+          }
+        });
+      });
+    }).catch(()=>{});
+}
+</script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

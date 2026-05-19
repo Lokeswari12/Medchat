@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Cancer Prevention Guide – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-shield-alt"></i> <span data-i18n="prevention_title">Cancer Prevention Guide</span></h1>
+      <p class="page-sub">Evidence-based tips to reduce your cancer risk — lifestyle, diet, screening, and vaccinations</p>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="prev-stats-bar">
+    <div class="prev-stat"><span class="prev-stat-num">40%</span><span>of cancers are preventable</span></div>
+    <div class="prev-stat"><span class="prev-stat-num">90%</span><span>survival if detected early</span></div>
+    <div class="prev-stat"><span class="prev-stat-num">1/3</span><span>linked to tobacco use</span></div>
+    <div class="prev-stat"><span class="prev-stat-num">1/5</span><span>linked to infections (HPV, HBV)</span></div>
+  </div>
+
+  <!-- Lifestyle -->
+  <h2 class="prev-section-title"><i class="fas fa-heart"></i> Lifestyle Changes</h2>
+  <div class="prev-grid">
+
+    <div class="prev-card prev-card-red">
+      <div class="prev-icon"><i class="fas fa-ban"></i></div>
+      <h3>Stop Tobacco — #1 Priority</h3>
+      <p>Tobacco causes 30% of all cancer deaths. Lung, throat, mouth, oesophagus, bladder, kidney, cervix, and stomach cancers are all directly linked. There is no safe level of tobacco use.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: Contact NTCP Helpline 1800-11-2356 for free quit support</div>
+    </div>
+
+    <div class="prev-card prev-card-amber">
+      <div class="prev-icon"><i class="fas fa-wine-bottle"></i></div>
+      <h3>Limit Alcohol</h3>
+      <p>Alcohol increases risk of mouth, throat, oesophagus, liver, colorectal, and breast cancers. The risk increases with the amount consumed — less is always better. Even moderate drinking raises risk.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: Limit to 1 drink/day (women), 2/day (men) or better — eliminate</div>
+    </div>
+
+    <div class="prev-card prev-card-green">
+      <div class="prev-icon"><i class="fas fa-running"></i></div>
+      <h3>Exercise Regularly</h3>
+      <p>Physical activity reduces risk of colorectal, breast, and endometrial cancers by up to 25%. It also reduces obesity — a key cancer risk factor. Exercise helps regulate hormones and inflammation.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: 150 min moderate or 75 min vigorous exercise per week</div>
+    </div>
+
+    <div class="prev-card prev-card-blue">
+      <div class="prev-icon"><i class="fas fa-weight"></i></div>
+      <h3>Maintain Healthy Weight</h3>
+      <p>Obesity is linked to 13 types of cancer including breast, colorectal, pancreatic, kidney, and oesophageal. Excess body fat causes hormonal imbalances and chronic inflammation that promote cancer growth.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: Target BMI 18.5–24.9 through diet and exercise</div>
+    </div>
+
+    <div class="prev-card prev-card-purple">
+      <div class="prev-icon"><i class="fas fa-sun"></i></div>
+      <h3>Protect from UV Radiation</h3>
+      <p>UV rays from the sun are the #1 cause of skin cancer (melanoma). India's proximity to the equator means high UV exposure. 90% of skin cancers are preventable with sun protection.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: Use SPF 30+ sunscreen, wear protective clothing, avoid peak hours (10am-4pm)</div>
+    </div>
+
+    <div class="prev-card prev-card-teal">
+      <div class="prev-icon"><i class="fas fa-moon"></i></div>
+      <h3>Improve Sleep & Reduce Stress</h3>
+      <p>Chronic sleep deprivation disrupts hormones and immune function, increasing cancer risk. High cortisol from chronic stress suppresses natural killer cells that fight cancer cells.</p>
+      <div class="prev-action-tag"><i class="fas fa-lightbulb"></i> Action: Target 7-9 hours of sleep nightly; practice yoga, meditation, or deep breathing</div>
+    </div>
+  </div>
+
+  <!-- Diet -->
+  <h2 class="prev-section-title" style="margin-top:40px"><i class="fas fa-utensils"></i> Diet & Nutrition</h2>
+  <div class="diet-grid">
+    <div class="diet-col diet-eat">
+      <div class="diet-col-header eat-header"><i class="fas fa-check-circle"></i> Eat More</div>
+      <ul class="diet-list">
+        <li><i class="fas fa-leaf"></i><div><strong>Cruciferous vegetables</strong> — Broccoli, cauliflower, cabbage, kale. Contain sulforaphane that kills cancer cells.</div></li>
+        <li><i class="fas fa-apple-alt"></i><div><strong>Berries & citrus fruits</strong> — High in antioxidants that prevent DNA damage.</div></li>
+        <li><i class="fas fa-seedling"></i><div><strong>Legumes & whole grains</strong> — Fibre lowers colorectal cancer risk by 10–20%.</div></li>
+        <li><i class="fas fa-fish"></i><div><strong>Fatty fish</strong> — Omega-3 fatty acids reduce inflammation linked to cancer.</div></li>
+        <li><i class="fas fa-mug-hot"></i><div><strong>Green tea</strong> — EGCG antioxidants may inhibit tumour growth.</div></li>
+        <li><i class="fas fa-pepper-hot"></i><div><strong>Turmeric</strong> — Curcumin has documented anti-cancer properties in studies.</div></li>
+        <li><i class="fas fa-carrot"></i><div><strong>Tomatoes & carrots</strong> — Lycopene and beta-carotene are protective antioxidants.</div></li>
+      </ul>
+    </div>
+    <div class="diet-col diet-avoid">
+      <div class="diet-col-header avoid-header"><i class="fas fa-times-circle"></i> Reduce or Avoid</div>
+      <ul class="diet-list">
+        <li><i class="fas fa-drumstick-bite"></i><div><strong>Processed & red meat</strong> — WHO Group 1 carcinogen. Limit to &lt;500g red meat/week, avoid processed meat.</div></li>
+        <li><i class="fas fa-cookie"></i><div><strong>Ultra-processed food</strong> — Chips, packaged snacks, instant noodles. Linked to 10% increased cancer risk.</div></li>
+        <li><i class="fas fa-candy-cane"></i><div><strong>Excess sugar</strong> — Feeds cancer cells and promotes obesity (a cancer risk factor).</div></li>
+        <li><i class="fas fa-fire"></i><div><strong>Charred or burnt food</strong> — Produces heterocyclic amines linked to colorectal and stomach cancer.</div></li>
+        <li><i class="fas fa-pepper-hot"></i><div><strong>Very hot beverages</strong> — Drinking tea/coffee above 65°C classified as Group 2A carcinogen (oesophageal cancer).</div></li>
+        <li><i class="fas fa-salt-shaker"></i><div><strong>High salt food</strong> — Excess salt linked to stomach cancer. Use herbs instead.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Screenings -->
+  <h2 class="prev-section-title" style="margin-top:40px"><i class="fas fa-vials"></i> Recommended Cancer Screenings in India</h2>
+  <div class="screening-table-wrap">
+    <table class="screening-table">
+      <thead>
+        <tr><th>Cancer Type</th><th>Who Should Screen</th><th>Test</th><th>Frequency</th><th>Cost Guide</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><i class="fas fa-ribbon" style="color:var(--rose)"></i> Breast</td><td>Women 40+</td><td>Mammogram + Clinical exam</td><td>Annually</td><td>₹800–2,000</td></tr>
+        <tr><td><i class="fas fa-female" style="color:var(--purple)"></i> Cervical</td><td>Women 21–65</td><td>Pap smear / HPV test</td><td>Every 3-5 years</td><td>₹300–1,500</td></tr>
+        <tr><td><i class="fas fa-colon" style="color:var(--amber)"></i> Colorectal</td><td>All adults 45+</td><td>Colonoscopy / Stool occult blood</td><td>Every 10 years / annually</td><td>₹500–5,000</td></tr>
+        <tr><td><i class="fas fa-male" style="color:var(--teal)"></i> Prostate</td><td>Men 50+ (45+ if high risk)</td><td>PSA blood test</td><td>Annually</td><td>₹400–800</td></tr>
+        <tr><td><i class="fas fa-lungs" style="color:var(--accent)"></i> Lung</td><td>Smokers 50–80 (20+ pack years)</td><td>Low-dose CT scan</td><td>Annually</td><td>₹2,000–5,000</td></tr>
+        <tr><td><i class="fas fa-filter" style="color:var(--green)"></i> Liver</td><td>Hepatitis B/C patients</td><td>Ultrasound + AFP blood test</td><td>Every 6 months</td><td>₹600–1,500</td></tr>
+        <tr><td><i class="fas fa-tint" style="color:var(--accent)"></i> Oral</td><td>Tobacco/betel nut users</td><td>Oral examination by dentist/doctor</td><td>Annually</td><td>₹100–500</td></tr>
+        <tr><td><i class="fas fa-sun" style="color:var(--amber)"></i> Skin</td><td>High UV exposure, light skin</td><td>Dermatoscopy</td><td>Annually</td><td>₹500–1,500</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vaccinations -->
+  <h2 class="prev-section-title" style="margin-top:40px"><i class="fas fa-syringe"></i> Cancer-Preventing Vaccinations</h2>
+  <div class="vaccine-grid">
+    <div class="vaccine-card">
+      <div class="vaccine-icon fi-purple"><i class="fas fa-syringe"></i></div>
+      <h3>HPV Vaccine</h3>
+      <p class="vaccine-cancer">Prevents: Cervical, Anal, Throat, Penile cancers</p>
+      <p>Recommended for girls & boys aged 9–26. Most effective before sexual debut. Available in India as Gardasil/Cervarix.</p>
+      <div class="vaccine-cost">₹2,000–4,000/dose · 2-3 doses required</div>
+    </div>
+    <div class="vaccine-card">
+      <div class="vaccine-icon fi-amber"><i class="fas fa-syringe"></i></div>
+      <h3>Hepatitis B Vaccine</h3>
+      <p class="vaccine-cancer">Prevents: Liver Cancer (HCC)</p>
+      <p>Free in India under National Immunisation Programme. Adults unvaccinated should get 3 doses. Hepatitis B is the leading cause of liver cancer in India.</p>
+      <div class="vaccine-cost">Free under NIP · Private: ₹200–600/dose</div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="prev-cta">
+    <div>
+      <h3>Check Your Personal Cancer Risk</h3>
+      <p>Answer a few questions and get your personalised AI risk score</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="{{ url_for('risk_calculator') }}" class="btn btn-primary btn-lg"><i class="fas fa-calculator"></i> Risk Calculator</a>
+      <a href="{{ url_for('upload') }}" class="btn btn-outline btn-lg"><i class="fas fa-upload"></i> Analyze a Report</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Report Comparison – {{ patient.name }} – CancerScreen AI{% endblock %}
+{% block content %}
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title"><i class="fas fa-chart-line"></i> Report Comparison</h1>
+      <p class="page-sub">Tracking {{ patient.name }}'s cancer screening history over time · {{ analyses|length }} report(s)</p>
+    </div>
+    <div class="header-actions">
+      <a href="{{ url_for('upload') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> New Report</a>
+    </div>
+  </div>
+
+  <!-- Patient Info Card -->
+  <div class="card" style="padding:20px;margin-bottom:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+    <div class="compare-avatar"><i class="fas fa-user-circle"></i></div>
+    <div>
+      <div style="font-size:20px;font-weight:800;color:var(--text)">{{ patient.name }}</div>
+      <div style="font-size:14px;color:var(--text-2);margin-top:2px">
+        Age: <strong>{{ patient.age or '—' }}</strong> &nbsp;·&nbsp;
+        Gender: <strong>{{ patient.gender or '—' }}</strong> &nbsp;·&nbsp;
+        Patient since: <strong>{{ patient.created_at }}</strong>
+      </div>
+    </div>
+    {% if patient.family_history and patient.family_history.cancer_types %}
+    <div class="fh-summary-badge">
+      <i class="fas fa-dna"></i>
+      Family history: {{ patient.family_history.cancer_types | join(', ') }}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if analyses|length < 2 %}
+  <div class="card" style="padding:40px;text-align:center;margin-bottom:24px">
+    <div style="font-size:48px;margin-bottom:16px;color:var(--text-3)"><i class="fas fa-chart-line"></i></div>
+    <h3 style="color:var(--text);margin-bottom:8px">Only 1 report available</h3>
+    <p style="color:var(--text-2);margin-bottom:20px">Upload another report for this patient to see trend comparisons.</p>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Another Report</a>
+  </div>
+  {% else %}
+
+  <!-- Trend Chart -->
+  <div class="card" style="padding:24px;margin-bottom:24px">
+    <div class="rc-header" style="margin-bottom:16px">
+      <i class="fas fa-chart-area" style="color:var(--accent)"></i>
+      <h3>Risk Confidence Trend Over Time</h3>
+    </div>
+    <canvas id="trendChart" height="80"></canvas>
+  </div>
+
+  <!-- Risk Timeline -->
+  <div class="card" style="padding:24px;margin-bottom:24px">
+    <div class="rc-header" style="margin-bottom:16px">
+      <i class="fas fa-history" style="color:var(--teal)"></i>
+      <h3>Risk Level Timeline</h3>
+    </div>
+    <div class="timeline">
+      {% for a in analyses %}
+      <div class="tl-item">
+        <div class="tl-dot tl-dot-{{ a.risk_level | lower }}"></div>
+        <div class="tl-content">
+          <div class="tl-date">{{ a.analyzed_at }}</div>
+          <div class="tl-risk tl-risk-{{ a.risk_level | lower }}">{{ a.risk_level }} Risk</div>
+          <div class="tl-cancer">{{ a.cancer_type }}</div>
+          <div class="tl-conf">{{ a.confidence_score | int }}% confidence</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- All Reports Side by Side -->
+  <h3 style="font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text)"><i class="fas fa-columns" style="color:var(--accent);margin-right:8px"></i>All Reports</h3>
+  <div class="compare-grid">
+    {% for a in analyses %}
+    <div class="compare-card rb-{{ a.risk_level | lower }}-border">
+      <div class="compare-card-header">
+        <div class="cmp-date"><i class="fas fa-calendar-alt"></i> {{ a.analyzed_at }}</div>
+        <span class="risk-badge risk-{{ a.risk_level | lower }}">{{ a.risk_level }}</span>
+      </div>
+      <div class="cmp-cancer">{{ a.cancer_type }}</div>
+      <div class="cmp-conf-bar">
+        <div class="cmp-conf-fill" style="width:{{ a.confidence_score | int }}%;background:{{ risk_levels[a.risk_level]['color'] if a.risk_level in risk_levels else '#0ea5e9' }}"></div>
+      </div>
+      <div class="cmp-conf-label">{{ a.confidence_score | int }}% AI confidence</div>
+
+      <div class="cmp-section-label">Key Findings</div>
+      <ul class="cmp-list">
+        {% for f in a.findings[:3] %}<li>{{ f }}</li>
+        {% else %}<li style="color:var(--text-3)">None recorded</li>{% endfor %}
+      </ul>
+
+      <div class="cmp-section-label">Biomarkers</div>
+      <div class="cmp-bm-list">
+        {% for bm in a.biomarkers[:3] %}<span class="cmp-bm-tag">{{ bm }}</span>
+        {% else %}<span style="font-size:13px;color:var(--text-3)">None recorded</span>{% endfor %}
+      </div>
+
+      <a href="{{ url_for('results', analysis_id=a.id) }}" class="btn btn-outline btn-sm btn-full" style="margin-top:14px">
+        <i class="fas fa-eye"></i> View Full Report
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="action-row" style="margin-top:24px">
+    <a href="{{ url_for('history') }}" class="btn btn-outline"><i class="fas fa-history"></i> All Analyses</a>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Upload New Report</a>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+{% if analyses|length >= 2 %}
+const dates  = {{ dates | safe }};
+const scores = {{ scores | safe }};
+const riskColors = { Low:'#059669', Medium:'#d97706', High:'#dc2626', Critical:'#9f1239' };
+const rls = {{ analyses | map(attribute='risk_level') | list | tojson }};
+const pointColors = rls.map(r => riskColors[r] || '#0ea5e9');
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: dates,
+    datasets: [{
+      label: 'AI Confidence Score',
+      data: scores,
+      borderColor: '#0ea5e9',
+      backgroundColor: 'rgba(14,165,233,0.08)',
+      pointBackgroundColor: pointColors,
+      pointBorderColor: pointColors,
+      pointRadius: 8,
+      pointHoverRadius: 10,
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#fff',
+        titleColor: '#0f172a',
+        bodyColor: '#475569',
+        borderColor: '#e2e8f0',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          afterLabel: ctx => `Risk: ${rls[ctx.dataIndex]}`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8' } },
+      y: { grid: { color: '#f1f5f9' }, ticks: { color: '#94a3b8' }, min: 0, max: 100 }
+    }
+  }
+});
+{% endif %}
+</script>
+{% endblock %}
