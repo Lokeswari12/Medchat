@@ -163,5 +163,5 @@ MIT License — free to use, modify, and distribute.
 
 ## Author
 
-**Krupakar**  
+**Lokeswari**  
 Built with Python, Flask, and Google MedGemma AI
